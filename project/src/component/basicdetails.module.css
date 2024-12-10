@@ -1,0 +1,12 @@
+
+
+.seelct{
+width:100%;
+padding:12px;
+ margin: 8px 0;
+   outline: none;
+   box-sizing: border-box;
+}
+.seelct option{
+    width:40%
+}

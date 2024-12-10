@@ -7,15 +7,14 @@ export default function Estimatetable() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/api/estimates')
-            .then((response) => {
-                setEstimates(response.data); // Store fetched data in state
-            })
-            .catch((error) => {
-                console.error('Error fetching estimates:', error);
-            });
-    }, []);
+        // Fetch data from the backend
+        axios.get("http://localhost:3001/api/estimates-details")
+          .then((response) =>{console.log(response.data); 
+            setEstimates(response.data)
+          } )
+          .catch((error) => console.error("Error fetching estimates:", error));
+      }, []);
+
 
     const handleNewEstimates = () => {
         navigate('/new-estimates'); // Change the route to /new-estimates
@@ -26,7 +25,7 @@ export default function Estimatetable() {
             <div style={{ padding: "2% 5%" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
-                        <p>Estimates</p>
+                        <p style={{fontSize:"20px",fontWeight:"bold"}}>Estimates</p>
                         <p>Manage the estimate information</p>
                     </div>
                     <div>
@@ -36,7 +35,8 @@ export default function Estimatetable() {
                                 backgroundColor: "#D15B2C",
                                 color: "white",
                                 border: "none",
-                                padding: "10px"
+                                padding: "10px",
+                                borderRadius:"5px"
                             }}
                         >
                             Add New Estimates
@@ -44,8 +44,9 @@ export default function Estimatetable() {
                     </div>
                 </div>
                 <hr />
-                <div>
-                    <p>Search by supplier name or contact number or email address</p>
+                <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
+                    <img src='.\images\OIP.jpg' style={{height:"10px",width:"10px"}}></img>
+                    <p style={{color:"#2F2F2F"}}>Search by supplier name or contact number or email address</p>
                 </div>
                 <hr></hr>
 
@@ -105,6 +106,7 @@ export default function Estimatetable() {
                         </div>
                     </div>
                 </div>
+                <hr></hr>
             </div>
         </>
     );

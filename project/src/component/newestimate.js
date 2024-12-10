@@ -8,24 +8,22 @@ import QuoteDetails from './quotedetails';
 export default function NewEstimate() {
     const navigate = useNavigate(); 
     const [formData, setFormData] = useState({
-      client_name: '',
-      sales_person: '',
-      department_name: '',
-      contact_name: '',
-      address: '',
-      estimate_title: '',
-      customer_order_number: '',
-      estimated_date: '',
-      valid_days: '',
+        client_name: '',
+        department_name: '',
+        contact_name: '',
+        salesperson: '',
+        address: '',
+        estimate_title: '',
+        customer_order_number: '',
+        estimated_date: '',
+        valid_days: '',
+        quotes: []
     });
   
     const [currentStep, setCurrentStep] = useState('basicDetails');
   
-    const handleFormDataChange = (field, value) => {
-      setFormData({
-        ...formData,
-        [field]: value,
-      });
+    const handleFormDataChange = (key, value) => {
+        setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
   
     const handleNextStep = () => {
@@ -54,20 +52,22 @@ export default function NewEstimate() {
         style={{
           width: '100%',
           height: '100vh', // Full viewport height
-          backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black
-         
+          backgroundColor: 'rgba(0, 0, 0, 0.2)'
+          , // Semi-transparent black
+         padding:"5%",
+         boxSizing:"border-box",
           position: 'relative',
         }}
       >
-        <p>Estimates</p>
+        <p style={{fontWeight:"bold",fontSize:"18px"}}>Estimates</p>
         <p>Manage the estimate information</p>
 
         <div
           style={{
-            width: '35%',
-            padding: '10px',
+            width: '30%',
+            padding: '20px',
             backgroundColor: 'white', // Ensure this is opaque for the content
-            border: '1px solid black',
+           
             position: 'absolute',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             right:"0",
@@ -76,40 +76,42 @@ export default function NewEstimate() {
             boxSizing:"border-box"
           }}
         >
-            <div style={{display:"flex",justifyContent:"space-between"}}>
-            <p>Add Estimate</p>
-            <button onClick={handleClose}>x</button>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:'center'}}>
+            <p style={{fontSize:"14px",fontWeight:"bold"}}>Add Estimate</p>
+            <button onClick={handleClose} style={{border:"1px solid",height:"20px",width:"20px", borderRadius:"50px"}}>x</button>
             </div>
+            <hr></hr>
           
           <div style={{ display: 'flex', gap: '20px' }}>
             <p
-              style={{ cursor: 'pointer', fontWeight: currentStep === 'basicDetails' ? 'bold' : 'normal' }}
+              style={{ cursor: 'pointer', fontWeight: currentStep === 'basicDetails' ? 'bold' : 'normal' ,fontSize:"12px"}}
               onClick={() => setCurrentStep('basicDetails')}
             >
               Basic Details
             </p>
             <p
-              style={{ cursor: 'pointer', fontWeight: currentStep === 'estimateDetails' ? 'bold' : 'normal' }}
+              style={{ cursor: 'pointer', fontWeight: currentStep === 'estimateDetails' ? 'bold' : 'normal',fontSize:"12px" }}
               onClick={() => setCurrentStep('estimateDetails')}
             >
               Estimate Details
             </p>
             <p
-              style={{ cursor: 'pointer', fontWeight: currentStep === 'quoteDetails' ? 'bold' : 'normal' }}
+              style={{ cursor: 'pointer', fontWeight: currentStep === 'quoteDetails' ? 'bold' : 'normal' ,fontSize:"12px"}}
               onClick={() => setCurrentStep('quoteDetails')}
             >
               Quote Details
             </p>
           </div>
+          <hr></hr>
   
           {currentStep === 'basicDetails' && (
             <BasicDetails formData={formData} onFormDataChange={handleFormDataChange} onNextStep={handleNextStep} />
           )}
           {currentStep === 'estimateDetails' && (
-            <EstimateDetails formData={formData} onFormDataChange={handleFormDataChange} onNextStep={handleNextStep} />
+            <EstimateDetails formData={formData} onFormDataChange={handleFormDataChange} onNextStep={handleNextStep} onBackToBasicDetails={() => setCurrentStep('basicDetails')} />
           )}
           {currentStep === 'quoteDetails' && (
-            <QuoteDetails formData={formData} onFormDataChange={handleFormDataChange} onCreateEstimate={handleCreateEstimate} />
+            <QuoteDetails formData={formData} onFormDataChange={handleFormDataChange} onCreateEstimate={handleCreateEstimate} onBackToEstimateDetails={() => setCurrentStep('estimateDetails')} />
           )}
         </div>
       </div>
