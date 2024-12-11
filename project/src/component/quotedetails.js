@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
+import styles from './quotedetails.module.css'
 
-export default function QuoteDetails({ formData, onFormDataChange, onCreateEstimate,onBackToEstimateDetails }) {
+export default function QuoteDetails({onBack}) {
 
     const [showDropdown, setShowDropdown] = useState(false); // Manage dropdown visibility
   const [quotes, setQuotes] = useState([]); // Store fetched quote details
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (showDropdown) {
@@ -21,26 +23,31 @@ export default function QuoteDetails({ formData, onFormDataChange, onCreateEstim
 
   return (
     <div>
-        <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-<img src='./images/arrow-left.svg' style={{height:"10px",width:"10px"}}></img>
-<p style={{ cursor: 'pointer',fontWeight:"bold" }} onClick={onBackToEstimateDetails}>Back to estimate details</p>
+        <div style={{display:"flex",alignItems:"center",gap:"10px"}}onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={onBack}>
+<img src='./images/arrow-left.svg' style={{height:"10px",width:"10px",position: "relative",
+            left: isHovered ? "-5px" : "0px", // Move left when hovered
+            transition: "left 0.2s ease"}}></img>
+<p style={{ cursor: 'pointer',fontWeight:"bold" ,fontSize:"12px"}} onClick={onBack}>Back to estimate details</p>
         </div>
+        <hr></hr>
         
-      <h2>Quote Details</h2>
      
-        <p>Estimate Type</p>
+     
+        <p style={{fontSize:"14px"}}>Estimate Type</p>
        
       
-      <p>You can add any one or multiple quotes at the same time.</p>
+      <p style={{fontSize:"13px"}}>You can add any one or multiple quotes at the same time.</p>
 
       <div style={{display:"flex",gap:"15px",alignItems:"center"}} onClick={() => setShowDropdown((prev) => !prev)} >
-        <button >+</button>
-        <p>Add new estimate</p>
+        <button style={{border:"none"}} >+</button>
+        <p style={{fontSize:"14px"}}>Add new estimate</p>
 
       </div>
 
       {showDropdown && (
-        <ul style={{ border: '1px solid #ccc', padding: '10px', listStyle: 'none' }}>
+        <ul style={{ border: '1px solid #ccc', padding: '10px', listStyle: 'none',width:"40%",cursor:"pointer",margin:"0" }}>
           {quotes.length > 0 ? (
             quotes.map((quote) => (
               <li key={quote.quote_id} style={{ padding: '5px 0' }}>
@@ -53,7 +60,12 @@ export default function QuoteDetails({ formData, onFormDataChange, onCreateEstim
         </ul>
       )}
       {/* Create Estimate Button */}
-      <button onClick={onCreateEstimate}style={{width:"100%",padding:'10px',border:"none" ,backgroundColor: "#D15B2C"}}>Create Estimate</button>
+      <div style={{position:'fixed',bottom:"0",width:"28%",marginBottom:"0.5%"}} >
+        <hr />
+        <button className={styles.btn}  >
+         Create Estimate
+        </button>
+      </div>
     </div>
   );
 }

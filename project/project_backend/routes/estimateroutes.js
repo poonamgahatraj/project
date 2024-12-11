@@ -41,7 +41,7 @@ router.get('/clients', (req, res) => {
 });
 
 router.get('/salespersons', (req, res) => {
-    const query = 'SELECT sales_person_id, sales_person_name FROM SalesPersons';
+    const query = 'SELECT sales_person_name FROM SalesPersons';
     db.query(query, (err, results) => {
         if (err) {
             console.error('Error fetching salespersons:', err);

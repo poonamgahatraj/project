@@ -1,66 +1,84 @@
 import React from 'react';
+import { useState } from 'react';
 
-export default function EstimateDetails({ formData, onFormDataChange, onNextStep , onBackToBasicDetails}) {
+export default function EstimateDetails({  onBack,handlenextstep}) {
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <div >
-            <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-<img src='./images/arrow-left.svg' style={{height:"10px",width:"10px"}}></img>
-<p style={{ cursor: 'pointer',fontWeight:"bold",fontSize:"12px" }} onClick={onBackToBasicDetails}>Back to basic details</p>
+            <div style={{display:"flex",alignItems:"center",gap:"10px"}} onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={onBack} >
+<img src='./images/arrow-left.svg' style={{height:"10px",width:"10px",position: "relative",
+            left: isHovered ? "-5px" : "0px", // Move left when hovered
+            transition: "left 0.2s ease"}}></img>
+<p style={{ cursor: 'pointer',fontWeight:"bold",fontSize:"12px" }}  >Back to basic details</p>
         </div>
         <hr></hr>
 
-     <p>Enter estimate details here</p>
+     <p style={{fontSize:"14px"}}>Enter estimate details here</p>
       <div>
-        <label style={{fontWeight:"bold"}}>Estimate Title (Required):</label>
+        <label style={{fontWeight:"bold",fontSize:"14px"}}>Estimate Title (Required):</label>
         <input
           type="text"
-          value={formData.estimate_title}
-          onChange={(e) => onFormDataChange('estimate_title', e.target.value)}
-          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",border:"1px solid #E0DFDF"}}
+          
+         placeholder='Enter title here'
+          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",outline:"none",border:"1px solid #E0DFDF",borderRadius:"5px"}}
         />
       </div>
 
       {/* Customer Order Number */}
       <div>
-        <label style={{fontWeight:"bold"}}>Customer Order Number:</label><br></br>
+        <label style={{fontWeight:"bold",fontSize:"14px"}}>Customer Order Number:</label><br></br>
         <input
           type="number"
-          value={formData.customer_order_number}
-          onChange={(e) => onFormDataChange('customer_order_number', e.target.value)}
-          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",border:"1px solid #E0DFDF"}}
+          
+        placeholder='Enter order number here'
+          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",outline:"none",border:"1px solid #E0DFDF",borderRadius:"5px"}}
         />
       </div>
 
       {/* Pick a Date */}
       <div>
-        <label style={{fontWeight:"bold"}}>Pick a Date:</label><br></br>
+        <label style={{fontWeight:"bold",fontSize:"14px"}}>Pick a Date:</label><br></br>
         <p style={{margin:"5px 0px ",fontSize:"13px"}}>Please choose a suitable estimate date.</p>
         <input
           type="date"
-          value={formData.estimated_date}
-          onChange={(e) => onFormDataChange('estimated_date', e.target.value)}
-          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",border:"1px solid #E0DFDF"}}
+         
+          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",border:"1px solid #E0DFDF",outline:"none",borderRadius:"5px"}}
+          
         />
       </div>
 
       {/* Valid */}
       <div>
-        <label style={{fontWeight:"bold"}}>Valid </label><br></br>
+        <label style={{fontWeight:"bold",fontSize:"14px"}}>Valid </label><br></br>
         <input
           type="number"
-          value={formData.valid_days}
-          onChange={(e) => onFormDataChange('valid_days', e.target.value)}
-          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",border:"1px solid #E0DFDF"}}
+         
+          placeholder='30'
+          
+          style={{width:"100%",padding:"10px",boxSizing:"border-box",margin:"10px 0",border:"1px solid #E0DFDF",outline:"none",borderRadius:"5px"}}
         />
       </div>
 
       {/* Next Step Button */}
-      <div style={{position:"fixed",bottom:"0",width:"30%"}} >
-        <hr ></hr>
-
-{/* Next Step Button */}
-<button onClick={onNextStep} style={{width:"100%",padding:'15px',border:"none" ,backgroundColor: "#D15B2C",color:"white",fontSize:"16px"}}>Next Step</button>
-        </div>
+      <div style={{position:'fixed',bottom:"0",width:"28%",marginBottom:"0.5%"}} >
+        <hr />
+        <button
+          style={{
+            width: '100%',
+            padding: '15px',
+            border: 'none',
+            backgroundColor: '#D15B2C',
+            color: 'white',
+            fontSize: '16px',
+            margin:"10px 0px"
+          }}
+          onClick={handlenextstep}
+        >
+          Next Step
+        </button>
+      </div>
     </div>
   );
 }

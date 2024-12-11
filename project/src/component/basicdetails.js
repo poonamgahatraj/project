@@ -1,234 +1,274 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState,useEffect } from 'react';
-import styles from './basicdetails.module.css'
+import styles from './basicdetails.module.css';
 
-
-export default function BasicDetails() {
-    const [clients, setClients] = useState([]); // Store fetched clients
-  const [selectedClient, setSelectedClient] = useState('');
-  const [departments, setDepartments] = useState([]); 
-  const [selectedDepartment, setSelectedDepartment] = useState('');
+export default function BasicDetails({handlenextstep}) {
+  const [clients, setClients] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [salespersons, setSalespersons] = useState([]);
-const [selectedSalesperson, setSelectedSalesperson] = useState('');
-const [addresses, setAddresses] = useState([]); // Store fetched addresses
-const [selectedAddress, setSelectedAddress] = useState(''); // Store selected address
-const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [addresses, setAddresses] = useState([]);
 
+  const [selectedClient, setSelectedClient] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedContact, setSelectedContact] = useState('');
+  const [selectedSalesperson, setSelectedSalesperson] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState('');
 
-  useEffect(() => {
-    // Fetch clients on component mount
-    axios
-      .get('http://localhost:3001/api/clients')
-      .then((response) => {
-        setClients(response.data); // Update state with fetched clients
-      })
-      .catch((error) => {
-        console.error('Error fetching clients:', error);
-      });
-  }, []);
+  const [showClientDropdown, setShowClientDropdown] = useState(false);
+  const [showDepartmentDropdown, setShowDepartmentDropdown] = useState(false);
+  const [showContactDropdown, setShowContactDropdown] = useState(false);
+  const [showSalespersonDropdown, setShowSalespersonDropdown] = useState(false);
+  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/departments')
-      .then((response) => {
-        console.log('Departments data:', response.data); // Check if data is correct
-        setDepartments(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching departments:', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-        .get('http://localhost:3001/api/contacts')
-        .then((response) => {
-            setContacts(response.data); // Update state with fetched contacts
-        })
-        .catch((error) => {
-            console.error('Error fetching contacts:', error);
-        });
-}, []);
-
-useEffect(() => {
-    const fetchSalespersons = async () => {
-        try {
-            const response = await axios.get('http://localhost:3001/api/salespersons');
-            setSalespersons(response.data); // Update the state with fetched data
-        } catch (error) {
-            console.error('Error fetching salespersons:', error);
-        }
-    };
-
-    fetchSalespersons();
-}, []);
-useEffect(() => {
-    const fetchAddresses = async () => {
-        try {
-            const response = await axios.get('http://localhost:3001/api/addresses');
-            setAddresses(response.data); // Update state with fetched addresses
-        } catch (error) {
-            console.error('Error fetching addresses:', error);
-        }
-    };
-    fetchAddresses();
-}, []);
-const handleInputClick = () => {
-    setIsDropdownVisible(!isDropdownVisible); // Show dropdown on input click
+  // Fetch functions
+  const fetchClients = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/clients');
+      setClients(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
   };
 
-  const handleOptionClick = (client) => {
-    setSelectedClient(client.client_name); // Set selected client name
-    setIsDropdownVisible(false); // Hide dropdown after selection
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/departments');
+      setDepartments(response.data);
+    } catch (error) {
+      console.error('Error fetching departments:', error);
+    }
   };
 
+  const fetchContacts = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/contacts');
+      setContacts(response.data);
+    } catch (error) {
+      console.error('Error fetching contacts:', error);
+    }
+  };
+
+  const fetchSalespersons = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/salespersons');
+      setSalespersons(response.data);
+    } catch (error) {
+      console.error('Error fetching salespersons:', error);
+    }
+  };
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/addresses');
+      setAddresses(response.data);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+
+  // Field handlers
+  const handleClientSelect = (client) => {
+    setSelectedClient(client.client_name);
+    setShowClientDropdown(false);
+  };
+
+  const handleDepartmentSelect = (department) => {
+    setSelectedDepartment(department.department_name);
+    setShowDepartmentDropdown(false);
+  };
+
+  const handleContactSelect = (contact) => {
+    setSelectedContact(contact.contact_name);
+    setShowContactDropdown(false);
+  };
+
+  const handleSalespersonSelect = (salesperson) => {
+    setSelectedSalesperson(salesperson.salesperson_name);
+    setShowSalespersonDropdown(false);
+  };
+
+  const handleAddressSelect = (address) => {
+    setSelectedAddress(address.address);
+    setShowAddressDropdown(false);
+  };
 
   return (
-    <div style={{boxSizing:"border-box"}}>
-      <p>Let’s start with basic details.</p>
+    <div style={{ boxSizing: 'border-box',backgroundColor:"#FDFBFB" }}>
+      <p style={{fontSize:"14px"}}>Let’s start with basic details.</p>
 
       {/* Client Name */}
-      <div style={{marginTop:"8px", position: "relative" }}>
-        <label style={{fontSize:"14px",fontWeight:"bold"}}>Client Name:</label><br></br>
-        <input placeholder='Select a clent...' value={selectedClient} className={styles.seelct} id="client"   onClick={handleInputClick}></input>
-        {isDropdownVisible && (
-    <div
-      style={{
-        border: "1px solid black",
-        width: "30%",
-        marginTop: "4px",
-        backgroundColor: "#fff",
-        
-        
-        position: "absolute",
-        top: "100%", // Position below the input field
-        left: 0,
-        zIndex: 10,
-      }}
-    >
-      {clients.map((client) => (
-        <div
-          key={client.client_id}
-          style={{
-            padding: "8px",
-            cursor: "pointer",
-            borderBottom: "1px solid #ccc",
+      <div style={{ marginTop: '8px', position: 'relative' }}>
+        <label className={styles.label}>Client Name</label>
+        <br />
+        <input
+          placeholder="Select a client..."
+          className={styles.seelct}
+          value={selectedClient}
+          onClick={() => {
+            setShowClientDropdown(!showClientDropdown);
+            if (!showClientDropdown) fetchClients();
           }}
-          onClick={() => handleOptionClick(client)}
-        >
-          {client.client_name}
-        </div>
-      ))}
-    </div>
-  )}
-       
-     
+          onChange={(e) => setSelectedClient(e.target.value)}
+        />
+        {showClientDropdown && (
+          <div className={styles.dropdown}>
+            {clients.length > 0 ? (
+              clients.map((client) => (
+                <div
+                  key={client.id}
+                  className={styles.dropdownItem}
+                  onClick={() => handleClientSelect(client)}
+                >
+                  {client.client_name}
+                </div>
+              ))
+            ) : (
+              <div className={styles.noData}>No clients found</div>
+            )}
+          </div>
+        )}
       </div>
 
-      
-
       {/* Department Name */}
-      <div style={{marginTop:"8px"}}>
-     
-  <label style={{fontSize:"14px",fontWeight:"bold"}}>Department Name:</label><br />
-  <select
-    id="department"
-    value={selectedDepartment}
-    onChange={(e) => setSelectedDepartment(e.target.value)}
-    className={styles.seelct}
-  >
-    <option value="">Select a department</option>
-    {departments.length > 0 ? (
-      departments.map((department) => (
-        <option key={department.department_id} value={department.department_id}>
-          {department.department_name}
-        </option>
-      ))
-    ) : (
-      <option value="">No departments available</option>
-    )}
-  </select>
-</div>
+      <div style={{ marginTop: '8px', position: 'relative' }}>
+        <label className={styles.label}>Department Name</label>
+        <br />
+        <input
+          placeholder="Select a department..."
+          className={styles.seelct}
+          value={selectedDepartment}
+          onClick={() => {
+            setShowDepartmentDropdown(!showDepartmentDropdown);
+            if (!showDepartmentDropdown) fetchDepartments();
+          }}
+          onChange={(e) => setSelectedDepartment(e.target.value)}
+        />
+        {showDepartmentDropdown && (
+          <div className={styles.dropdown}>
+            {departments.length > 0 ? (
+              departments.map((department) => (
+                <div
+                  key={department.id}
+                  className={styles.dropdownItem}
+                  onClick={() => handleDepartmentSelect(department)}
+                >
+                  {department.department_name}
+                </div>
+              ))
+            ) : (
+              <div className={styles.noData}>No departments found</div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Contact Name */}
-      <div style={{marginTop:"8px"}}>
-    <label style={{fontSize:"14px",fontWeight:"bold"}}>Contact Name:</label><br />
-    <select
-        id="contact-name"
-       
-       
-        className={styles.seelct}
-    >
-        <option value="">Select a contact</option>
-        {contacts.length > 0 ? (
-            contacts.map((contact, index) => (
-                <option key={index} value={contact.contact_name}>
-                    {contact.contact_name}
-                </option>
-            ))
-        ) : (
-            <option value="">No contacts available</option>
+      <div style={{ marginTop: '8px', position: 'relative' }}>
+        <label className={styles.label}>Contact Name</label>
+        <br />
+        <input
+          placeholder="Select a contact..."
+          className={styles.seelct}
+          value={selectedContact}
+          onClick={() => {
+            setShowContactDropdown(!showContactDropdown);
+            if (!showContactDropdown) fetchContacts();
+          }}
+          onChange={(e) => setSelectedContact(e.target.value)}
+        />
+        {showContactDropdown && (
+          <div className={styles.dropdown}>
+            {contacts.length > 0 ? (
+              contacts.map((contact) => (
+                <div
+                  key={contact.id}
+                  className={styles.dropdownItem}
+                  onClick={() => handleContactSelect(contact)}
+                >
+                  {contact.contact_name}
+                </div>
+              ))
+            ) : (
+              <div className={styles.noData}>No contacts found</div>
+            )}
+          </div>
         )}
-    </select>
-</div>
+      </div>
 
-<div style={{marginTop:"8px"}}>
-  <label style={{fontSize:"14px",fontWeight:"bold"}}>Sales Person:</label><br />
-  <select
-    id="salesperson"
-    value={selectedSalesperson}
-    onChange={(e) => setSelectedSalesperson(e.target.value)}
-    className={styles.seelct}
-  >
-    <option value="">Select a salesperson</option>
-    {salespersons.length > 0 ? (
-      salespersons.map((salesperson) => (
-        <option key={salesperson.sales_person_id} value={salesperson.sales_person_id}>
-          {salesperson.sales_person_name}
-        </option>
-      ))
-    ) : (
-      <option value="">No salespersons available</option>
-    )}
-  </select>
-</div>
+      {/* Salesperson */}
+      <div style={{ marginTop: '8px', position: 'relative' }}>
+        <label className={styles.label}>Sales Person</label>
+        <br />
+        <input
+          placeholder="Select a salesperson..."
+          className={styles.seelct}
+          value={selectedSalesperson}
+          onClick={() => {
+            setShowSalespersonDropdown(!showSalespersonDropdown);
+            if (!showSalespersonDropdown) fetchSalespersons();
+          }}
+          onChange={(e) => setSelectedSalesperson(e.target.value)}
+        />
+        {showSalespersonDropdown && (
+          <div className={styles.dropdown}>
+            {salespersons.length > 0 ? (
+              salespersons.map((salesperson) => (
+                <div
+                  key={salesperson.id}
+                  className={styles.dropdownItem}
+                  onClick={() => handleSalespersonSelect(salesperson)}
+                >
+                  {salesperson.sales_person_name}
+                </div>
+              ))
+            ) : (
+              <div className={styles.noData}>No salespersons found</div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Address */}
-      <div style={{marginTop:"8px"}}>
-            <label style={{fontSize:"14px",fontWeight:"bold"}}>Address:</label><br />
-            <select
-                id="address"
-                value={selectedAddress}
-                onChange={(e) => {
-                    setSelectedAddress(e.target.value);
-                    // Pass selected value to parent
-                }}
-                className={styles.seelct}
-            >
-                <option value="">Select an address</option>
-                {addresses.length > 0 ? (
-                    addresses.map((address) => (
-                        <option
-                            key={address.address_id}
-                            value={`${address.street}, ${address.city}, ${address.state}, ${address.zip_code}`}
-                        >
-                            {address.street}, {address.city}, {address.state}, {address.zip_code}
-                        </option>
-                    ))
-                ) : (
-                    <option value="">No addresses available</option>
-                )}
-            </select>
-        </div>
-        <div style={{marginTop:"50%"}} >
-        <hr ></hr>
+      <div style={{ marginTop: '8px', position: 'relative' }}>
+        <label className={styles.label}>Address</label>
+        <br />
+        <input
+          placeholder="Select an address..."
+          className={styles.seelct}
+          value={selectedAddress}
+          onClick={() => {
+            setShowAddressDropdown(!showAddressDropdown);
+            if (!showAddressDropdown) fetchAddresses();
+          }}
+          onChange={(e) => setSelectedAddress(e.target.value)}
+        />
+        {showAddressDropdown && (
+          <div className={styles.dropdown}>
+            {addresses.length > 0 ? (
+              addresses.map((address) => (
+                <div
+                  key={address.id}
+                  className={styles.dropdownItem}
+                  onClick={() => handleAddressSelect(address)}
+                >
+                  {address.street}
+                </div>
+              ))
+            ) : (
+              <div className={styles.noData}>No addresses found</div>
+            )}
+          </div>
+        )}
+      </div>
 
-{/* Next Step Button */}
-<button  style={{width:"100%",padding:'15px',border:"none" ,backgroundColor: "#D15B2C",color:"white",fontSize:"16px"}}>Next Step</button>
-        </div>
-        
+      {/* Next Step Button */}
+      <div style={{ position: 'fixed', bottom: '0', width: '28%', marginBottom: '0.5%' }}>
+        <hr />
+        <button className={styles.btn} onClick={handlenextstep}>
+          Next Step
+        </button>
+      </div>
     </div>
   );
 }

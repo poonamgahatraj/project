@@ -7,45 +7,58 @@ import QuoteDetails from './quotedetails';
 
 export default function NewEstimate() {
     const navigate = useNavigate(); 
-    const [formData, setFormData] = useState({
-        client_name: '',
-        department_name: '',
-        contact_name: '',
-        salesperson: '',
-        address: '',
-        estimate_title: '',
-        customer_order_number: '',
-        estimated_date: '',
-        valid_days: '',
-        quotes: []
+    const [basicDetails, setBasicDetails] = useState({
+      client: '',
+      department: '',
+      contact: '',
+      salesperson: '',
+      address: '',
     });
+
+    const [estimateDetails, setEstimateDetails] = useState({
+      estimateTitle: '',
+      orderNumber: '',
+      date: '',
+      validity: '',
+    });
+
+    const [quoteDetails, setQuoteDetails] = useState({
+      quoteDescription: '',
+      additionalNotes: '',
+    });
+
+    const handleCreateEstimate = async () => {
+      const data = { ...basicDetails, ...estimateDetails, ...quoteDetails };
   
+      try {
+        const response = await axios.post('http://localhost:3001/api/create-estimate', data);
+        console.log('Response from server:', response.data);
+      } catch (error) {
+        console.error('Request error:', error.message); // Log error message
+        console.error('Error details:', error.response || error); // Log detailed error
+      }
+    };
     const [currentStep, setCurrentStep] = useState('basicDetails');
   
-    const handleFormDataChange = (key, value) => {
-        setFormData((prevData) => ({ ...prevData, [key]: value }));
-    };
+   
   
-    const handleNextStep = () => {
+    const handlenextstep =()=>{
       if (currentStep === 'basicDetails') {
         setCurrentStep('estimateDetails');
       } else if (currentStep === 'estimateDetails') {
         setCurrentStep('quoteDetails');
-      }
-    };
+      } 
+    }
   
-    const handleCreateEstimate = async () => {
-      try {
-        const response = await axios.post('http://localhost:3001/api/submit-estimate', formData);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error creating estimate:', error);
-      }
-    };
+   
 
     const handleClose = () => {
         navigate('/'); // Navigate to the home route
       };
+
+      const getSelectedStyle = (step) => {
+    return currentStep === step ? { fontWeight: 'bold', borderBottom: '2px solid #d15b2c' } : {};
+  };
   
     return (
       <div
@@ -66,52 +79,52 @@ export default function NewEstimate() {
           style={{
             width: '30%',
             padding: '20px',
-            backgroundColor: 'white', // Ensure this is opaque for the content
+            backgroundColor: '#FDFBFB', // Ensure this is opaque for the content
            
             position: 'absolute',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             right:"0",
            top:"0",
             height:"100%",
-            boxSizing:"border-box"
+            boxSizing:"border-box",border:"1px solid #E0DFDF"
           }}
         >
             <div style={{display:"flex",justifyContent:"space-between",alignItems:'center'}}>
             <p style={{fontSize:"14px",fontWeight:"bold"}}>Add Estimate</p>
-            <button onClick={handleClose} style={{border:"1px solid",height:"20px",width:"20px", borderRadius:"50px"}}>x</button>
+            <button onClick={handleClose} style={{border:"1px solid #E0DFDF",height:"30px",width:"30px", borderRadius:"50px"}}>x</button>
             </div>
-            <hr></hr>
+            <hr style={{margin:"15px 0px"}}></hr>
           
-          <div style={{ display: 'flex', gap: '20px' }}>
+          <div style={{ display: 'flex', gap: '25px' }}>
             <p
-              style={{ cursor: 'pointer', fontWeight: currentStep === 'basicDetails' ? 'bold' : 'normal' ,fontSize:"12px"}}
+              style={{ cursor: 'pointer',margin:"0",paddingBottom:"15px", fontWeight: currentStep === 'basicDetails' ? '500' : '500' ,fontSize:"12px" ,...getSelectedStyle('basicDetails')}}
               onClick={() => setCurrentStep('basicDetails')}
             >
               Basic Details
             </p>
             <p
-              style={{ cursor: 'pointer', fontWeight: currentStep === 'estimateDetails' ? 'bold' : 'normal',fontSize:"12px" }}
+              style={{ cursor: 'pointer',margin:"0",paddingBottom:"15px", fontWeight: currentStep === 'estimateDetails' ? '500' : '500',fontSize:"12px",...getSelectedStyle('estimateDetails') }}
               onClick={() => setCurrentStep('estimateDetails')}
             >
               Estimate Details
             </p>
             <p
-              style={{ cursor: 'pointer', fontWeight: currentStep === 'quoteDetails' ? 'bold' : 'normal' ,fontSize:"12px"}}
+              style={{ cursor: 'pointer',margin:"0",paddingBottom:"15px", fontWeight: currentStep === 'quoteDetails' ? '500' : '500' ,fontSize:"12px",...getSelectedStyle('quoteDetails')}}
               onClick={() => setCurrentStep('quoteDetails')}
             >
               Quote Details
             </p>
           </div>
-          <hr></hr>
+          <hr style={{margin:"0"}}></hr>
   
           {currentStep === 'basicDetails' && (
-            <BasicDetails formData={formData} onFormDataChange={handleFormDataChange} onNextStep={handleNextStep} />
+            <BasicDetails  handlenextstep={handlenextstep}  />
           )}
           {currentStep === 'estimateDetails' && (
-            <EstimateDetails formData={formData} onFormDataChange={handleFormDataChange} onNextStep={handleNextStep} onBackToBasicDetails={() => setCurrentStep('basicDetails')} />
+            <EstimateDetails details={estimateDetails} setDetails={setEstimateDetails} onBack={() => setCurrentStep('basicDetails')} handlenextstep={handlenextstep}  />
           )}
           {currentStep === 'quoteDetails' && (
-            <QuoteDetails formData={formData} onFormDataChange={handleFormDataChange} onCreateEstimate={handleCreateEstimate} onBackToEstimateDetails={() => setCurrentStep('estimateDetails')} />
+            <QuoteDetails details={quoteDetails} setDetails={setQuoteDetails} onCreate={handleCreateEstimate} onBack={() => setCurrentStep('estimateDetails')}/>
           )}
         </div>
       </div>
