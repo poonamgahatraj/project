@@ -62,10 +62,10 @@ export default function NewEstimate() {
       width: '30px',
       height: '30px',
       borderRadius: '50%',
-      backgroundColor: completedSteps.includes(step) ? '#FDFBFB' : '#4343430D',
-      color: completedSteps.includes(step) ? '#D15B2C' : '#2F2F2F',
-      border: completedSteps.includes(step)
-        ? '0.2px solid #D15B2C' // Orange border when completed
+      backgroundColor: currentStep === step || completedSteps.includes(step) ? '#FDFBFB' : '#4343430D',
+      color: currentStep === step || completedSteps.includes(step) ? '#D15B2C' : '#2F2F2F',
+      border: currentStep === step || completedSteps.includes(step)
+        ? '0.2px solid #D15B2C' // Orange border for active or completed step
         : '0.2px solid #636363', // Default gray border
       display: 'flex',
       alignItems: 'center',
@@ -75,8 +75,8 @@ export default function NewEstimate() {
     text: {
       marginLeft: '8px',
       fontSize: '14px',
-      fontWeight: completedSteps.includes(step) ? '500' : '500',
-      color: '#2F2F2F',
+      fontWeight: currentStep === step ? '500' : '500',
+      color: currentStep === step || completedSteps.includes(step) ? '#2F2F2F' : '#2F2F2F', // Orange text for active or completed step
     },
     container: {
       cursor: 'pointer',
@@ -103,8 +103,8 @@ export default function NewEstimate() {
 
       <div
         style={{
-          width: '30%',
-          padding: '20px',
+          width: '35%',
+         height:"100vh",
           backgroundColor: '#FDFBFB',
           position: 'absolute',
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -113,27 +113,30 @@ export default function NewEstimate() {
           height: '100%',
           boxSizing: 'border-box',
           border: '1px solid #E0DFDF',
+          
+         
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <p style={{ fontSize: '16px', fontWeight: '500' }}>Add Estimate</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',padding:"0px 20px" }}>
+          <p style={{ fontSize: '16px', fontWeight: '500',margin:'10px 0px' }}>Add Estimate</p>
           <button
             onClick={handleClose}
             style={{
               border: '1px solid #E0DFDF',
-              height: '30px',
-              width: '30px',
+              height: '25px',
+              width: '25px',
               borderRadius: '50%',
               cursor: 'pointer',
+              backgroundColor:"white"
             }}
           >
             x
           </button>
         </div>
-        <hr style={{ margin: '15px 0px' }} />
+        <hr style={{ margin: '0px 0px' }} />
 
         {/* Step Bar */}
-        <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '25px', alignItems: 'center' ,padding:"0px 20px"}}>
           {['BasicDetails', 'EstimateDetails', 'QuoteDetails'].map((step, index) => {
             const stepStyle = getStepStyle(step);
             return (
