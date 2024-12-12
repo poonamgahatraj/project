@@ -1,0 +1,37 @@
+.custom-steps .ant-steps-item-container {
+    text-align: center;
+  }
+  
+  .custom-steps .ant-steps-item-title {
+    color: orange !important; /* Text color */
+    font-weight: bold;
+  }
+  
+  .custom-steps .ant-steps-item-description {
+    color: orange !important;
+    font-size: 24px; /* Step number size */
+    font-weight: bold;
+  }
+  
+  .custom-steps .ant-steps-item {
+    border-color: orange !important; /* Border color */
+  }
+  
+  .custom-steps .ant-steps-item-process .ant-steps-item-icon {
+    background-color: orange !important; /* Active step color */
+    border-color: orange !important;
+  }
+  
+  .custom-steps .ant-steps-item-process .ant-steps-item-title {
+    color: orange !important; /* Active step text */
+  }
+  
+  .custom-steps .ant-steps-item-finish .ant-steps-item-icon {
+    background-color: orange !important; /* Completed step color */
+    border-color: orange !important;
+  }
+  
+  .custom-steps .ant-steps-item-finish .ant-steps-item-title {
+    color: orange !important; /* Completed step text */
+  }
+  

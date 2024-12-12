@@ -6,128 +6,179 @@ import EstimateDetails from './estimatedetails';
 import QuoteDetails from './quotedetails';
 
 export default function NewEstimate() {
-    const navigate = useNavigate(); 
-    const [basicDetails, setBasicDetails] = useState({
-      client: '',
-      department: '',
-      contact: '',
-      salesperson: '',
-      address: '',
-    });
+  const navigate = useNavigate();
 
-    const [estimateDetails, setEstimateDetails] = useState({
-      estimateTitle: '',
-      orderNumber: '',
-      date: '',
-      validity: '',
-    });
+  const [basicDetails, setBasicDetails] = useState({
+    client: '',
+    department: '',
+    contact: '',
+    salesperson: '',
+    address: '',
+  });
 
-    const [quoteDetails, setQuoteDetails] = useState({
-      quoteDescription: '',
-      additionalNotes: '',
-    });
+  const [estimateDetails, setEstimateDetails] = useState({
+    estimateTitle: '',
+    orderNumber: '',
+    date: '',
+    validity: '',
+  });
 
-    const handleCreateEstimate = async () => {
-      const data = { ...basicDetails, ...estimateDetails, ...quoteDetails };
-  
-      try {
-        const response = await axios.post('http://localhost:3001/api/create-estimate', data);
-        console.log('Response from server:', response.data);
-      } catch (error) {
-        console.error('Request error:', error.message); // Log error message
-        console.error('Error details:', error.response || error); // Log detailed error
-      }
-    };
-    const [currentStep, setCurrentStep] = useState('basicDetails');
-  
-   
-  
-    const handlenextstep =()=>{
-      if (currentStep === 'basicDetails') {
-        setCurrentStep('estimateDetails');
-      } else if (currentStep === 'estimateDetails') {
-        setCurrentStep('quoteDetails');
-      } 
+  const [quoteDetails, setQuoteDetails] = useState({
+    quoteDescription: '',
+    additionalNotes: '',
+  });
+
+  const [currentStep, setCurrentStep] = useState('BasicDetails');
+  const [completedSteps, setCompletedSteps] = useState([]);
+
+  const handleCreateEstimate = async () => {
+    const data = { ...basicDetails, ...estimateDetails, ...quoteDetails };
+
+    try {
+      const response = await axios.post('http://localhost:3001/api/create-estimate', data);
+      console.log('Response from server:', response.data);
+    } catch (error) {
+      console.error('Request error:', error.message);
+      console.error('Error details:', error.response || error);
     }
-  
-   
-
-    const handleClose = () => {
-        navigate('/'); // Navigate to the home route
-      };
-
-      const getSelectedStyle = (step) => {
-    return currentStep === step ? { fontWeight: 'bold', borderBottom: '2px solid #d15b2c' } : {};
   };
-  
-    return (
+
+  const handleNextStep = () => {
+    if (currentStep === 'BasicDetails') {
+      setCurrentStep('EstimateDetails');
+      setCompletedSteps((prevSteps) => [...prevSteps, 'BasicDetails']);
+    } else if (currentStep === 'EstimateDetails') {
+      setCurrentStep('QuoteDetails');
+      setCompletedSteps((prevSteps) => [...prevSteps, 'EstimateDetails']);
+    }
+  };
+
+  const handleClose = () => {
+    navigate('/');
+  };
+
+  const getStepStyle = (step) => ({
+    circle: {
+      width: '30px',
+      height: '30px',
+      borderRadius: '50%',
+      backgroundColor: completedSteps.includes(step) ? '#FDFBFB' : '#4343430D',
+      color: completedSteps.includes(step) ? '#D15B2C' : '#2F2F2F',
+      border: completedSteps.includes(step)
+        ? '0.2px solid #D15B2C' // Orange border when completed
+        : '0.2px solid #636363', // Default gray border
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '14px',
+    },
+    text: {
+      marginLeft: '8px',
+      fontSize: '14px',
+      fontWeight: completedSteps.includes(step) ? '500' : '500',
+      color: '#2F2F2F',
+    },
+    container: {
+      cursor: 'pointer',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderBottom: currentStep === step ? '2px solid #D15B2C' : 'none',
+    },
+  });
+
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        padding: '5%',
+        boxSizing: 'border-box',
+        position: 'relative',
+      }}
+    >
+      <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Estimates</p>
+      <p>Manage the estimate information</p>
+
       <div
         style={{
-          width: '100%',
-          height: '100vh', // Full viewport height
-          backgroundColor: 'rgba(0, 0, 0, 0.2)'
-          , // Semi-transparent black
-         padding:"5%",
-         boxSizing:"border-box",
-          position: 'relative',
+          width: '30%',
+          padding: '20px',
+          backgroundColor: '#FDFBFB',
+          position: 'absolute',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          right: '0',
+          top: '0',
+          height: '100%',
+          boxSizing: 'border-box',
+          border: '1px solid #E0DFDF',
         }}
       >
-        <p style={{fontWeight:"bold",fontSize:"18px"}}>Estimates</p>
-        <p>Manage the estimate information</p>
-
-        <div
-          style={{
-            width: '30%',
-            padding: '20px',
-            backgroundColor: '#FDFBFB', // Ensure this is opaque for the content
-           
-            position: 'absolute',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            right:"0",
-           top:"0",
-            height:"100%",
-            boxSizing:"border-box",border:"1px solid #E0DFDF"
-          }}
-        >
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:'center'}}>
-            <p style={{fontSize:"14px",fontWeight:"bold"}}>Add Estimate</p>
-            <button onClick={handleClose} style={{border:"1px solid #E0DFDF",height:"30px",width:"30px", borderRadius:"50px"}}>x</button>
-            </div>
-            <hr style={{margin:"15px 0px"}}></hr>
-          
-          <div style={{ display: 'flex', gap: '25px' }}>
-            <p
-              style={{ cursor: 'pointer',margin:"0",paddingBottom:"15px", fontWeight: currentStep === 'basicDetails' ? '500' : '500' ,fontSize:"12px" ,...getSelectedStyle('basicDetails')}}
-              onClick={() => setCurrentStep('basicDetails')}
-            >
-              Basic Details
-            </p>
-            <p
-              style={{ cursor: 'pointer',margin:"0",paddingBottom:"15px", fontWeight: currentStep === 'estimateDetails' ? '500' : '500',fontSize:"12px",...getSelectedStyle('estimateDetails') }}
-              onClick={() => setCurrentStep('estimateDetails')}
-            >
-              Estimate Details
-            </p>
-            <p
-              style={{ cursor: 'pointer',margin:"0",paddingBottom:"15px", fontWeight: currentStep === 'quoteDetails' ? '500' : '500' ,fontSize:"12px",...getSelectedStyle('quoteDetails')}}
-              onClick={() => setCurrentStep('quoteDetails')}
-            >
-              Quote Details
-            </p>
-          </div>
-          <hr style={{margin:"0"}}></hr>
-  
-          {currentStep === 'basicDetails' && (
-            <BasicDetails  handlenextstep={handlenextstep}  />
-          )}
-          {currentStep === 'estimateDetails' && (
-            <EstimateDetails details={estimateDetails} setDetails={setEstimateDetails} onBack={() => setCurrentStep('basicDetails')} handlenextstep={handlenextstep}  />
-          )}
-          {currentStep === 'quoteDetails' && (
-            <QuoteDetails details={quoteDetails} setDetails={setQuoteDetails} onCreate={handleCreateEstimate} onBack={() => setCurrentStep('estimateDetails')}/>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <p style={{ fontSize: '16px', fontWeight: '500' }}>Add Estimate</p>
+          <button
+            onClick={handleClose}
+            style={{
+              border: '1px solid #E0DFDF',
+              height: '30px',
+              width: '30px',
+              borderRadius: '50%',
+              cursor: 'pointer',
+            }}
+          >
+            x
+          </button>
         </div>
+        <hr style={{ margin: '15px 0px' }} />
+
+        {/* Step Bar */}
+        <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
+          {['BasicDetails', 'EstimateDetails', 'QuoteDetails'].map((step, index) => {
+            const stepStyle = getStepStyle(step);
+            return (
+              <div
+                key={step}
+                style={stepStyle.container}
+                onClick={() => setCurrentStep(step)}
+              >
+                <div style={stepStyle.circle}>
+                  {completedSteps.includes(step) ? (
+                    <span style={{ color: '#D15B2C' }}>✓</span> // Orange colored tick
+                  ) : (
+                    (index + 1).toString().padStart(2, '0')
+                  )}
+                </div>
+                <p style={stepStyle.text}>
+                  {step.replace(/([A-Z])/g, ' $1').trim()}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <hr style={{ margin: '0' }} />
+
+        {/* Step Content */}
+        {currentStep === 'BasicDetails' && (
+          <BasicDetails handlenextstep={handleNextStep} />
+        )}
+        {currentStep === 'EstimateDetails' && (
+          <EstimateDetails
+            details={estimateDetails}
+            setDetails={setEstimateDetails}
+            onBack={() => setCurrentStep('BasicDetails')}
+            handlenextstep={handleNextStep}
+          />
+        )}
+        {currentStep === 'QuoteDetails' && (
+          <QuoteDetails
+            details={quoteDetails}
+            setDetails={setQuoteDetails}
+            onCreate={handleCreateEstimate}
+            onBack={() => setCurrentStep('EstimateDetails')}
+          />
+        )}
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

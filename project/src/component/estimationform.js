@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import styles from './estimationform.module.css'
 
 export default function Estimatetable() {
     const [estimates, setEstimates] = useState([]);
@@ -22,11 +23,11 @@ export default function Estimatetable() {
 
     return (
         <>
-            <div style={{ padding: "2% 5%" }}>
+            <div style={{ padding: "2% 5%" ,backgroundColor:"#FDFBFB" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
-                        <p style={{fontSize:"20px",fontWeight:"bold"}}>Estimates</p>
-                        <p>Manage the estimate information</p>
+                        <p style={{fontSize:"22px",fontWeight:"500"}}>Estimates</p>
+                        <p style={{fontSize:"18px"}}>Manage the estimate information</p>
                     </div>
                     <div>
                         <button
@@ -45,21 +46,21 @@ export default function Estimatetable() {
                 </div>
                 <hr />
                 <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
-                    <img src='.\images\OIP.jpg' style={{height:"10px",width:"10px"}}></img>
-                    <p style={{color:"#2F2F2F"}}>Search by supplier name or contact number or email address</p>
+                    <img src='.\images\OIP.jpg' style={{height:"15px",width:"15px"}}></img>
+                    <p style={{color:"#2F2F2F",fontSize:"16px"}}>Search by supplier name or contact number or email address</p>
                 </div>
                 <hr></hr>
 
                 <table style={{ width: '100%', borderCollapse: 'collapse',marginLeft:"0" }}>
                     <thead>
-                        <tr style={{ borderBottom: '1px solid #ccc',height:"30px" }}>
-                            <th style={{textAlign:"left"}}>Estimate ID</th>
-                            <th style={{textAlign:"left"}}>Client Name</th>
-                            <th style={{textAlign:"left"}}>Estimate Title</th>
-                            <th style={{textAlign:"left"}}>Customer Order Number</th>
-                            <th style={{textAlign:"left"}}>Estimate Type</th>
-                            <th style={{textAlign:"left"}}>Sales Person</th>
-                            <th style={{textAlign:"left"}}>Estimated Date</th>
+                        <tr style={{ borderBottom: '1px solid #ccc',height:"50px" }}>
+                            <th className={styles.th} >Estimate ID</th>
+                            <th className={styles.th} >Client Name</th>
+                            <th className={styles.th}>Estimate Title</th>
+                            <th className={styles.th}>Customer Order Number</th>
+                            <th className={styles.th}>Estimate Type</th>
+                            <th className={styles.th}>Sales Person</th>
+                            <th className={styles.th}>Estimated Date</th>
                             <th></th> {/* Empty header for the image column */}
                         </tr>
                     </thead>
@@ -94,15 +95,19 @@ export default function Estimatetable() {
                     </tbody>
                 </table>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <p>Showing 1-1 of 2 estimates</p>
+                    <p style={{fontSize:"16px",fontWeight:"500"}}>Showing 1-1 of 2 estimates</p>
                     <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                        <p>The page you’re on</p>
-                        <div style={{ border: "1px solid #BCBCBC" }}>10</div>
-                        <div style={{ border: "1px solid #BCBCBC" }}>
-                            <img src='./images/arrow-left.svg' style={{ height: "15px" }} alt="left arrow" />
+                        <p style={{fontSize:"16px",fontWeight:"500"}}>The page you’re on</p>
+                        <div className={styles.pagination} style={{display:"flex",alignItems:"center"}}>
+                        <div  >10</div>
+                        <img src='.\images\arrow-down-bold.svg' style={{ height: "10px",width:"15px" }}></img>
                         </div>
-                        <div style={{ border: "1px solid #BCBCBC" }}>
-                            <img src='./images/arrow-right.svg' style={{ height: "15px" }} alt="right arrow" />
+                        
+                        <div className={styles.pagination}>
+                            <img src='.\images\back2.webp' style={{ height: "10px",width:"15px" }} alt="left arrow" />
+                        </div>
+                        <div className={styles.pagination}>
+                            <img src='.\images\right.png' style={{ height: "10px",width:"15px" }} alt="right arrow" />
                         </div>
                     </div>
                 </div>

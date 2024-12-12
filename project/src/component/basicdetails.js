@@ -95,14 +95,14 @@ export default function BasicDetails({handlenextstep}) {
 
   return (
     <div style={{ boxSizing: 'border-box',backgroundColor:"#FDFBFB" }}>
-      <p style={{fontSize:"14px"}}>Let’s start with basic details.</p>
+      <p style={{fontSize:"16px"}}>Let’s start with basic details.</p>
 
       {/* Client Name */}
       <div style={{ marginTop: '8px', position: 'relative' }}>
         <label className={styles.label}>Client Name</label>
         <br />
         <input
-          placeholder="Select a client..."
+          placeholder="Select here"
           className={styles.seelct}
           value={selectedClient}
           onClick={() => {
@@ -135,7 +135,7 @@ export default function BasicDetails({handlenextstep}) {
         <label className={styles.label}>Department Name</label>
         <br />
         <input
-          placeholder="Select a department..."
+          placeholder="Select here"
           className={styles.seelct}
           value={selectedDepartment}
           onClick={() => {
@@ -168,7 +168,7 @@ export default function BasicDetails({handlenextstep}) {
         <label className={styles.label}>Contact Name</label>
         <br />
         <input
-          placeholder="Select a contact..."
+          placeholder="Select here"
           className={styles.seelct}
           value={selectedContact}
           onClick={() => {
@@ -201,7 +201,7 @@ export default function BasicDetails({handlenextstep}) {
         <label className={styles.label}>Sales Person</label>
         <br />
         <input
-          placeholder="Select a salesperson..."
+          placeholder="Select here"
           className={styles.seelct}
           value={selectedSalesperson}
           onClick={() => {
@@ -234,7 +234,7 @@ export default function BasicDetails({handlenextstep}) {
         <label className={styles.label}>Address</label>
         <br />
         <input
-          placeholder="Select an address..."
+          placeholder="Select here"
           className={styles.seelct}
           value={selectedAddress}
           onClick={() => {
