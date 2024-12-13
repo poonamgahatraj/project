@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import BasicDetails from './basicdetails';
 import EstimateDetails from './estimatedetails';
 import QuoteDetails from './quotedetails';
+import Headers from './headers';
+import Sidenav from './sidenav';
 
 export default function NewEstimate() {
   const navigate = useNavigate();
@@ -62,7 +64,7 @@ export default function NewEstimate() {
       width: '30px',
       height: '30px',
       borderRadius: '50%',
-      backgroundColor: currentStep === step || completedSteps.includes(step) ? '#FDFBFB' : '#4343430D',
+      backgroundColor: currentStep === step || completedSteps.includes(step) ? '#FDFBFB' : 'white',
       color: currentStep === step || completedSteps.includes(step) ? '#D15B2C' : '#2F2F2F',
       border: currentStep === step || completedSteps.includes(step)
         ? '0.2px solid #D15B2C' // Orange border for active or completed step
@@ -83,29 +85,30 @@ export default function NewEstimate() {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      backgroundColor:'#FDFBFB',
       borderBottom: currentStep === step ? '2px solid #D15B2C' : 'none',
     },
   });
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        padding: '5%',
-        boxSizing: 'border-box',
-        position: 'relative',
-      }}
-    >
-      <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Estimates</p>
-      <p>Manage the estimate information</p>
+
+    <div style={{width:"100vw",height:"100vh",boxSizing:"border-box",overflow:"hidden",position: 'relative',backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
+
+        
+<Headers/>
+<div style={{display:"flex",overflow:"hidden"}}>
+<Sidenav/>
+    <div style={{width: '95%',height: '100vh',padding: "0% 5%" ,boxSizing: 'border-box', border:"2px solid #E0DFDF"}} >
+    <div>
+                        <p style={{fontSize:"22px",fontWeight:"500"}}>Estimates</p>
+                        <p style={{fontSize:"18px"}}>Manage the estimate information</p>
+                    </div>
 
       <div
         style={{
           width: '35%',
          height:"100vh",
-          backgroundColor: '#FDFBFB',
+          backgroundColor: 'white',
           position: 'absolute',
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
           right: '0',
@@ -117,7 +120,7 @@ export default function NewEstimate() {
          
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',padding:"0px 20px" }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',padding:"0px 20px" ,backgroundColor:"white"}}>
           <p style={{ fontSize: '16px', fontWeight: '500',margin:'10px 0px' }}>Add Estimate</p>
           <button
             onClick={handleClose}
@@ -133,7 +136,7 @@ export default function NewEstimate() {
             x
           </button>
         </div>
-        <hr style={{ margin: '0px 0px' }} />
+        <div style={{width:"100%",border:"0.5px solid #E0DFDF"}}></div>
 
         {/* Step Bar */}
         <div style={{ display: 'flex', gap: '25px', alignItems: 'center' ,padding:"0px 20px"}}>
@@ -159,7 +162,7 @@ export default function NewEstimate() {
             );
           })}
         </div>
-        <hr style={{ margin: '0' }} />
+        <div style={{width:"100%",border:"0.5px solid #E0DFDF"}}></div>
 
         {/* Step Content */}
         {currentStep === 'BasicDetails' && (
@@ -174,14 +177,11 @@ export default function NewEstimate() {
           />
         )}
         {currentStep === 'QuoteDetails' && (
-          <QuoteDetails
-            details={quoteDetails}
-            setDetails={setQuoteDetails}
-            onCreate={handleCreateEstimate}
-            onBack={() => setCurrentStep('EstimateDetails')}
-          />
+          <QuoteDetails details={quoteDetails} setDetails={setQuoteDetails} onCreate={handleCreateEstimate} onBack={() => setCurrentStep('EstimateDetails')} />
         )}
       </div>
+    </div>
+    </div>
     </div>
   );
 }

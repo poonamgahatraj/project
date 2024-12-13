@@ -31,7 +31,7 @@ export default function QuoteDetails({onBack}) {
             transition: "left 0.2s ease"}}></img>
 <p style={{ cursor: 'pointer',fontWeight:"500" ,fontSize:"14px"}} onClick={onBack}>Back to estimate details</p>
         </div>
-        <hr></hr>
+        <div style={{width:"100%",border:"0.5px solid #E0DFDF"}}></div>
         
      
      <div style={{padding:"0px 20px"}}>
@@ -62,8 +62,8 @@ export default function QuoteDetails({onBack}) {
      </div>
        
       {/* Create Estimate Button */}
-      <div style={{ position: 'fixed', bottom: '0', width: '33%' ,padding:"0px 20px 18px 18px"}}>
-      <hr />
+      <div style={{ position: 'fixed', bottom: '0', width: '35%' ,padding:"0px 20px 18px 18px",boxSizing:"border-box"}}>
+      <div style={{width:"100%",border:"0.5px solid #E0DFDF"}}></div>
         <button className={styles.btn} >
         Create Estimate
         </button>

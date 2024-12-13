@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import styles from './estimationform.module.css'
+import styles from './estimationform.module.css';
+import Headers from './headers';
+import Sidenav from './sidenav';
 
 export default function Estimatetable() {
     const [estimates, setEstimates] = useState([]);
@@ -23,7 +25,14 @@ export default function Estimatetable() {
 
     return (
         <>
-            <div style={{ padding: "2% 5%" ,backgroundColor:"#FDFBFB" }}>
+        <div style={{width:"100vw",height:"100vh",boxSizing:"border-box",overflow:"hidden"}}>
+
+        
+<Headers/>
+<div style={{display:"flex",overflow:"hidden"}}>
+<Sidenav/>
+
+<div style={{ padding: "0% 5%" ,backgroundColor:"#FDFBFB",width:"95%",border:"1px solid #E0DFDF" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                         <p style={{fontSize:"22px",fontWeight:"500"}}>Estimates</p>
@@ -113,6 +122,9 @@ export default function Estimatetable() {
                 </div>
                 <hr></hr>
             </div>
+</div>
+</div>
+            
         </>
     );
 }
