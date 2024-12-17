@@ -35,15 +35,33 @@ export default function NewEstimate() {
 
   const handleCreateEstimate = async () => {
     const data = { ...basicDetails, ...estimateDetails, ...quoteDetails };
-
+  
     try {
       const response = await axios.post('http://localhost:3001/api/create-estimate', data);
       console.log('Response from server:', response.data);
+      // Handle success
     } catch (error) {
       console.error('Request error:', error.message);
-      console.error('Error details:', error.response || error);
+  
+      // Check if the error has a response property (i.e., server-side error)
+      if (error.response) {
+        console.error('Error response:', error.response);
+        // Try to extract the error message from the response
+        const errorMessage = error.response.data?.error || error.response.statusText || 'Unknown server error';
+        alert(`An error occurred while creating the estimate: ${errorMessage}`);
+      } else if (error.request) {
+        // If no response was received, it could be a network error
+        console.error('Error request:', error.request);
+        alert('No response received from the server. Please check your network connection.');
+      } else {
+        // For other types of errors
+        console.error('Error details:', error);
+        alert(`An error occurred: ${error.message || 'Unknown error'}`);
+      }
     }
   };
+  
+  
 
   const handleNextStep = () => {
     if (currentStep === 'BasicDetails') {
@@ -166,7 +184,7 @@ export default function NewEstimate() {
 
         {/* Step Content */}
         {currentStep === 'BasicDetails' && (
-          <BasicDetails handlenextstep={handleNextStep} />
+          <BasicDetails handlenextstep={handleNextStep} details={basicDetails} setBasicDetails={setBasicDetails} />
         )}
         {currentStep === 'EstimateDetails' && (
           <EstimateDetails

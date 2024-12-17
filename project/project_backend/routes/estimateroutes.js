@@ -76,7 +76,142 @@ router.get('/quotes', (req, res) => {
     });
 });
 
+router.post('/create-estimate', (req, res) => {
+  console.log('Received POST request to /api/create-estimate');
+  const { basicDetails, estimateDetails, quoteDetails } = req.body;
+
+  if (!basicDetails || !basicDetails.client) {
+    return res.status(400).send('Client name is required');
+  }
   
+  // Begin Transaction
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error('Error starting transaction:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Insert into Clients
+    db.query(
+      'INSERT INTO Clients (client_name) VALUES (?)',
+      [basicDetails.client],
+      (err, clientResult) => {
+        if (err) {
+          console.error('Error inserting into Clients:', err);
+          return db.rollback(() => {
+            res.status(500).send('Internal Server Error');
+          });
+        }
+
+        const clientId = clientResult.insertId;
+
+        // Insert into Departments
+        db.query(
+          'INSERT INTO Departments (department_name, client_id) VALUES (?, ?)',
+          [basicDetails.department, clientId],
+          (err, departmentResult) => {
+            if (err) {
+              console.error('Error inserting into Departments:', err);
+              return db.rollback(() => {
+                res.status(500).send('Internal Server Error');
+              });
+            }
+
+            const departmentId = departmentResult.insertId;
+
+            // Insert into Contacts
+            db.query(
+              'INSERT INTO Contacts (contact_name, department_id) VALUES (?, ?)',
+              [basicDetails.contact, departmentId],
+              (err) => {
+                if (err) {
+                  console.error('Error inserting into Contacts:', err);
+                  return db.rollback(() => {
+                    res.status(500).send('Internal Server Error');
+                  });
+                }
+
+                // Insert into SalesPersons
+                db.query(
+                  'INSERT INTO SalesPersons (sales_person_name, department_id) VALUES (?, ?)',
+                  [basicDetails.salesperson, departmentId],
+                  (err) => {
+                    if (err) {
+                      console.error('Error inserting into SalesPersons:', err);
+                      return db.rollback(() => {
+                        res.status(500).send('Internal Server Error');
+                      });
+                    }
+
+                    // Insert into Addresses
+                    db.query(
+                      'INSERT INTO Addresses (city, client_id) VALUES (?, ?)',
+                      [basicDetails.address, clientId],
+                      (err) => {
+                        if (err) {
+                          console.error('Error inserting into Addresses:', err);
+                          return db.rollback(() => {
+                            res.status(500).send('Internal Server Error');
+                          });
+                        }
+
+                        // Insert estimate-related details into existing tables
+                        db.query(
+                          'UPDATE Clients SET estimate_title = ?, customer_order_number = ?, estimated_date = ? WHERE client_id = ?',
+                          [
+                            estimateDetails.estimateTitle,
+                            estimateDetails.orderNumber,
+                            estimateDetails.date,
+                            clientId,
+                          ],
+                          (err) => {
+                            if (err) {
+                              console.error('Error updating Clients with estimate details:', err);
+                              return db.rollback(() => {
+                                res.status(500).send('Internal Server Error');
+                              });
+                            }
+
+                            // Insert quote-specific details into Quotes table
+                            db.query(
+                              'INSERT INTO Quotes (name) VALUES (?)',
+                              [quoteDetails.quoteDescription],
+                              (err) => {
+                                if (err) {
+                                  console.error('Error inserting into Quotes:', err);
+                                  return db.rollback(() => {
+                                    res.status(500).send('Internal Server Error');
+                                  });
+                                }
+
+                                // Commit transaction if all queries are successful
+                                db.commit((err) => {
+                                  if (err) {
+                                    console.error('Error committing transaction:', err);
+                                    return db.rollback(() => {
+                                      res.status(500).send('Internal Server Error');
+                                    });
+                                  }
+
+                                  console.log('Estimate created successfully');
+                                  res.status(201).send('Estimate created successfully!');
+                                });
+                              }
+                            );
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+});
     
 
 

@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './basicdetails.module.css';
 
-export default function BasicDetails({ handlenextstep }) {
+export default function BasicDetails({ details, setBasicDetails, handlenextstep }) {
   const [clients, setClients] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [salespersons, setSalespersons] = useState([]);
   const [addresses, setAddresses] = useState([]);
 
-  const [selectedClient, setSelectedClient] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [selectedContact, setSelectedContact] = useState('');
-  const [selectedSalesperson, setSelectedSalesperson] = useState('');
-  const [selectedAddress, setSelectedAddress] = useState('');
+  const [selectedClient, setSelectedClient] = useState(details.client || '');
+  const [selectedDepartment, setSelectedDepartment] = useState(details.department || '');
+  const [selectedContact, setSelectedContact] = useState(details.contact || '');
+  const [selectedSalesperson, setSelectedSalesperson] = useState(details.salesperson || '');
+  const [selectedAddress, setSelectedAddress] = useState(details.address || '');
 
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const [showDepartmentDropdown, setShowDepartmentDropdown] = useState(false);
@@ -71,26 +71,46 @@ export default function BasicDetails({ handlenextstep }) {
   const handleClientSelect = (client) => {
     setSelectedClient(client.client_name);
     setShowClientDropdown(false);
+    setBasicDetails((prevDetails) => ({
+      ...prevDetails,
+      client: client.client_name,
+    }));
   };
 
   const handleDepartmentSelect = (department) => {
     setSelectedDepartment(department.department_name);
     setShowDepartmentDropdown(false);
+    setBasicDetails((prevDetails) => ({
+      ...prevDetails,
+      department: department.department_name,
+    }));
   };
 
   const handleContactSelect = (contact) => {
     setSelectedContact(contact.contact_name);
     setShowContactDropdown(false);
+    setBasicDetails((prevDetails) => ({
+      ...prevDetails,
+      contact: contact.contact_name,
+    }));
   };
 
   const handleSalespersonSelect = (salesperson) => {
     setSelectedSalesperson(salesperson.sales_person_name);
     setShowSalespersonDropdown(false);
+    setBasicDetails((prevDetails) => ({
+      ...prevDetails,
+      salesperson: salesperson.sales_person_name,
+    }));
   };
 
   const handleAddressSelect = (address) => {
     setSelectedAddress(address.city);
     setShowAddressDropdown(false);
+    setBasicDetails((prevDetails) => ({
+      ...prevDetails,
+      address: address.city,
+    }));
   };
 
   const DropdownField = ({ label, value, onClick, showDropdown, data, handleSelect, fetchFunction }) => (
@@ -118,7 +138,7 @@ export default function BasicDetails({ handlenextstep }) {
             cursor: 'pointer',
           }}
         >
-          <img src='.\images\arrow-down-bold.svg' style={{height:"10px",width:"10px"}}></img>
+          <img src='.\images\arrow-down-bold.svg' style={{ height: "10px", width: "10px" }} />
         </span>
       </div>
       {showDropdown && (
@@ -137,9 +157,17 @@ export default function BasicDetails({ handlenextstep }) {
     </div>
   );
 
+  useEffect(() => {
+    fetchClients();
+    fetchDepartments();
+    fetchContacts();
+    fetchSalespersons();
+    fetchAddresses();
+  }, []);
+
   return (
     <div style={{ boxSizing: 'border-box', backgroundColor: 'white', width: '100%' }}>
-      <div style={{ padding: '0px 20px',backgroundColor:"white" }}>
+      <div style={{ padding: '0px 20px', backgroundColor: "white" }}>
         <p style={{ fontSize: '16px' }}>Let’s start with basic details.</p>
 
         <DropdownField
@@ -150,7 +178,6 @@ export default function BasicDetails({ handlenextstep }) {
           data={clients}
           handleSelect={handleClientSelect}
           fetchFunction={fetchClients}
-         
         />
         <DropdownField
           label="Department Name"
@@ -171,7 +198,7 @@ export default function BasicDetails({ handlenextstep }) {
           fetchFunction={fetchContacts}
         />
         <DropdownField
-          label="Salesperson"
+          label="Salesperson Name"
           value={selectedSalesperson}
           onClick={setShowSalespersonDropdown}
           showDropdown={showSalespersonDropdown}
@@ -190,9 +217,8 @@ export default function BasicDetails({ handlenextstep }) {
         />
       </div>
 
-      {/* Next Step Button */}
-      <div style={{ position: 'fixed', bottom: '0', width: '35%', padding: '0px 20px 18px 18px', boxSizing: 'border-box' }}>
-        <div style={{ width: '100%', border: '0.5px solid #E0DFDF' }}></div>
+      <div style={{ position: 'fixed', bottom: '0', width: '35%', padding: "0px 20px 18px 18px", boxSizing: "border-box" }}>
+        <div style={{ width: "100%", border: "0.5px solid #E0DFDF" }}></div>
         <button className={styles.btn} onClick={handlenextstep}>
           Next Step
         </button>
