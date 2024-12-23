@@ -2,7 +2,7 @@
 
 .seelct{
 width:100%;
-padding:12px;
+padding:14px;
  margin: 8px 0;
    outline: none;
    box-sizing: border-box;
@@ -33,7 +33,7 @@ transform: scaleY(2);
     background-color: #D15B2C;
     color: white;
     font-size: 14px;
-    margin-top: 10px 
+   
   
 }
 .dropdown {

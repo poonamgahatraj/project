@@ -21,18 +21,17 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
         onMouseLeave={() => setIsHovered(false)}
         onClick={onBack}
       >
-        <img
-          src='./images/arrow-left.svg'
+       <img
+          src='./images/blackarrow.jpg'
           style={{
-            height: "10px",
-            width: "10px",
-            position: "relative",
-            left: isHovered ? "-5px" : "0px",
-            transition: "left 0.2s ease"
+            height: '20px',
+            width: '15px',
+            position: 'relative',
+            left: isHovered ? '-5px' : '0px', // Move left when hovered
+            transition: 'left 0.2s ease',
           }}
-          alt="back arrow"
-        />
-        <p style={{ cursor: 'pointer', fontWeight: "bold", fontSize: "14px" }}>Back to basic details</p>
+        ></img>
+        <p style={{ cursor: 'pointer', fontSize: "14px" ,fontWeight:"500"}}>Back to basic details</p>
       </div>
       <div style={{ width: "100%", border: "0.5px solid #E0DFDF" }}></div>
       <div style={{ padding: "0px 20px" }}>
@@ -40,7 +39,7 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
 
         {/* Estimate Title */}
         <div>
-          <label style={{ fontWeight: "bold", fontSize: "16px" }}>Estimate Title (Required):</label>
+          <label style={{ fontWeight: "500", fontSize: "16px" }}>Estimate Title (Required):</label>
           <input
             type="text"
             name="estimateTitle"
@@ -49,7 +48,7 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
             onChange={handleInputChange}
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "14px",
               boxSizing: "border-box",
               margin: "10px 0",
               outline: "none",
@@ -61,7 +60,7 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
 
         {/* Customer Order Number */}
         <div>
-          <label style={{ fontWeight: "bold", fontSize: "16px" }}>Customer Order Number:</label><br />
+          <label style={{ fontWeight: "500", fontSize: "16px" }}>Customer Order Number:</label><br />
           <input
             type="number"
             name="orderNumber"
@@ -70,7 +69,7 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
             onChange={handleInputChange}
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "14px",
               boxSizing: "border-box",
               margin: "10px 0",
               outline: "none",
@@ -82,7 +81,7 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
 
         {/* Pick a Date */}
         <div>
-          <label style={{ fontWeight: "bold", fontSize: "16px" }}>Pick a Date:</label><br />
+          <label style={{ fontWeight: "500", fontSize: "16px" }}>Pick a Date:</label><br />
           <p style={{ margin: "5px 0px ", fontSize: "13px" }}>Please choose a suitable estimate date.</p>
           <input
             type="date"
@@ -91,7 +90,7 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
             onChange={handleInputChange}
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "14px",
               boxSizing: "border-box",
               margin: "10px 0",
               border: "1px solid #E0DFDF",
@@ -102,35 +101,81 @@ export default function EstimateDetails({ details, setDetails, onBack, handlenex
         </div>
 
         {/* Valid */}
-        <div>
-          <label style={{ fontWeight: "bold", fontSize: "16px" }}>Valid</label><br />
-          <input
-            type="number"
-            name="validity"
-            value={details.validity}
-            placeholder='30'
-            onChange={handleInputChange}
-            style={{
-              width: "100%",
-              padding: "10px",
-              boxSizing: "border-box",
-              margin: "10px 0",
-              border: "1px solid #E0DFDF",
-              outline: "none",
-              borderRadius: "5px"
-            }}
-          />
-        </div>
+    {/* Valid */}
+<div style={{ position: "relative", marginBottom: "10px" }}>
+  <label style={{ fontWeight: "500", fontSize: "16px" }}>Valid</label><br />
+  <input
+    type="number"
+    name="validity"
+    value={details.validity}
+    placeholder='30'
+    onChange={handleInputChange}
+    style={{
+      width: "100%",
+      padding: "14px",
+      boxSizing: "border-box",
+      outline: "none",
+      border: "1px solid #E0DFDF",
+      borderRadius: "5px",
+      margin:"10px 0px"
+    }}
+  />
+  <span
+    style={{
+      position: "absolute",
+      top: "60%",
+      right: "10px",
+      transform: "translateY(-50%)",
+      color: "#888",
+      fontSize: "14px",
+    }}
+  >
+    Days
+  </span>
+</div>
+
 
       </div>
 
       {/* Next Step Button */}
-      <div style={{ position: 'fixed', bottom: '0', width: '35%', padding: "0px 20px 18px 18px", boxSizing: "border-box" }}>
-        <div style={{ width: "100%", border: "0.5px solid #E0DFDF" }}></div>
-        <button className={styles.btn} onClick={handlenextstep}>
-          Next Step
-        </button>
-      </div>
+ 
+
+
+<div style={{ position: "relative", minHeight: "100vh" }}>
+  {/* Content Area */}
+  <div style={{ padding: "0px 20px", paddingBottom: "100px" }}>
+    {/* Your main content goes here */}
+  </div>
+
+  {/* Footer Area */}
+  <div
+    style={{
+      position: "fixed",
+      bottom: "0",
+      
+      width: "35%",
+      background: "#fff", // Optional for a consistent background
+    }}
+  >
+    {/* Divider */}
+    <div style={{ width: "100%", border: "0.5px solid #E0DFDF" }}></div>
+
+    {/* Button Area */}
+    <div
+      style={{
+        padding: "18px 20px",
+        boxSizing: "border-box",
+        display: "flex", // Optional for aligning content
+        justifyContent: "flex-start", // Adjust alignment as needed
+      }}
+    >
+      <button className={styles.btn} onClick={handlenextstep}>
+        Create Estimate
+      </button>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 }

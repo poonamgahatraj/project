@@ -77,11 +77,13 @@ router.get('/quotes', (req, res) => {
 });
 
 router.post('/create-estimate', (req, res) => {
-  console.log('Received POST request to /api/create-estimate');
+  console.log('Request body:', req.body); 
   const { basicDetails, estimateDetails, quoteDetails } = req.body;
 
-  if (!basicDetails || !basicDetails.client) {
-    return res.status(400).send('Client name is required');
+  const { client_name, department, contact, salesperson, address } = req.body;
+
+  if (!client_name) {
+    return res.status(400).json({ message: "Client name is required" });
   }
   
   // Begin Transaction
@@ -94,7 +96,7 @@ router.post('/create-estimate', (req, res) => {
     // Insert into Clients
     db.query(
       'INSERT INTO Clients (client_name) VALUES (?)',
-      [basicDetails.client],
+      [basicDetails.client_name],
       (err, clientResult) => {
         if (err) {
           console.error('Error inserting into Clients:', err);

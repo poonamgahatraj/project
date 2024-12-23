@@ -9,7 +9,7 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
   const [salespersons, setSalespersons] = useState([]);
   const [addresses, setAddresses] = useState([]);
 
-  const [selectedClient, setSelectedClient] = useState(details.client || '');
+  const [selectedClient, setSelectedClient] = useState(details.client_name || '');
   const [selectedDepartment, setSelectedDepartment] = useState(details.department || '');
   const [selectedContact, setSelectedContact] = useState(details.contact || '');
   const [selectedSalesperson, setSelectedSalesperson] = useState(details.salesperson || '');
@@ -69,13 +69,19 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
 
   // Field handlers
   const handleClientSelect = (client) => {
+    console.log('Selected client:', client.client_name);
     setSelectedClient(client.client_name);
     setShowClientDropdown(false);
     setBasicDetails((prevDetails) => ({
       ...prevDetails,
-      client: client.client_name,
+      client_name: client.client_name,
     }));
+
+     // 
   };
+  useEffect(() => {
+    console.log('Updated Basic Details after client selection:', details);
+  }, [details]);
 
   const handleDepartmentSelect = (department) => {
     setSelectedDepartment(department.department_name);
@@ -217,12 +223,40 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
         />
       </div>
 
-      <div style={{ position: 'fixed', bottom: '0', width: '35%', padding: "0px 20px 18px 18px", boxSizing: "border-box" }}>
-        <div style={{ width: "100%", border: "0.5px solid #E0DFDF" }}></div>
-        <button className={styles.btn} onClick={handlenextstep}>
-          Next Step
-        </button>
-      </div>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+  {/* Content Area */}
+  <div style={{ padding: "0px 20px", paddingBottom: "100px" }}>
+    {/* Your main content goes here */}
+  </div>
+
+  {/* Footer Area */}
+  <div
+    style={{
+      position: "fixed",
+      bottom: "0",
+      
+      width: "35%",
+      background: "#fff", // Optional for a consistent background
+    }}
+  >
+    {/* Divider */}
+    <div style={{ width: "100%", border: "0.5px solid #E0DFDF" }}></div>
+
+    {/* Button Area */}
+    <div
+      style={{
+        padding: "18px 20px",
+        boxSizing: "border-box",
+        display: "flex", // Optional for aligning content
+        justifyContent: "flex-start", // Adjust alignment as needed
+      }}
+    >
+      <button className={styles.btn} onClick={handlenextstep}>
+        Create Estimate
+      </button>
+    </div>
+  </div>
+</div>
     </div>
   );
 }

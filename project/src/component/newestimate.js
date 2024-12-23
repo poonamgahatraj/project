@@ -11,7 +11,7 @@ export default function NewEstimate() {
   const navigate = useNavigate();
 
   const [basicDetails, setBasicDetails] = useState({
-    client: '',
+    client_name: '',
     department: '',
     contact: '',
     salesperson: '',
@@ -35,9 +35,14 @@ export default function NewEstimate() {
 
   const handleCreateEstimate = async () => {
     const data = { ...basicDetails, ...estimateDetails, ...quoteDetails };
+    console.log('Payload:', data); 
   
     try {
-      const response = await axios.post('http://localhost:3001/api/create-estimate', data);
+      const response = await axios.post('http://localhost:3001/api/create-estimate',data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      } );
       console.log('Response from server:', response.data);
       // Handle success
     } catch (error) {
@@ -82,32 +87,36 @@ export default function NewEstimate() {
       width: '30px',
       height: '30px',
       borderRadius: '50%',
-      backgroundColor: currentStep === step || completedSteps.includes(step) ? '#FDFBFB' : 'white',
-      color: currentStep === step || completedSteps.includes(step) ? '#D15B2C' : '#2F2F2F',
-      border: currentStep === step || completedSteps.includes(step)
-        ? '0.2px solid #D15B2C' // Orange border for active or completed step
+      backgroundColor: completedSteps.includes(step) ? '#FDFBFB' : 'white',
+      color:step === 'BasicDetails' && currentStep === 'BasicDetails'?"#D15B2C": completedSteps.includes(step) ? '#D15B2C' : '#2F2F2F',
+      fontWeight: currentStep === step ? 'bold' : completedSteps.includes(step) ? 'bold' : 'bold', // Bold for active step
+      border: currentStep === step // Step 1 and it's active
+      ? '0.2px solid #D15B2C': completedSteps.includes(step)
+        ? '0.2px solid #D15B2C' // Orange border for completed step
         : '0.2px solid #636363', // Default gray border
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: '14px',
+      fontSize: '12px',
     },
     text: {
       marginLeft: '8px',
       fontSize: '14px',
-      fontWeight: currentStep === step ? '500' : '500',
-      color: currentStep === step || completedSteps.includes(step) ? '#2F2F2F' : '#2F2F2F', // Orange text for active or completed step
+      fontWeight: '500',
+      color: completedSteps.includes(step) ? '#2F2F2F' : '#2F2F2F', // Consistent color for text
     },
     container: {
       cursor: 'pointer',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor:'#FDFBFB',
+     
       borderBottom: currentStep === step ? '2px solid #D15B2C' : 'none',
+      height:"60px",
+    
     },
   });
-
+  
   return (
 
     <div style={{width:"100vw",height:"100vh",boxSizing:"border-box",overflow:"hidden",position: 'relative',backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
@@ -138,14 +147,14 @@ export default function NewEstimate() {
          
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',padding:"0px 20px" ,backgroundColor:"white"}}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',padding:"10px 20px" ,backgroundColor:"white"}}>
           <p style={{ fontSize: '16px', fontWeight: '500',margin:'10px 0px' }}>Add Estimate</p>
           <button
             onClick={handleClose}
             style={{
               border: '1px solid #E0DFDF',
-              height: '25px',
-              width: '25px',
+              height: '35px',
+              width: '35px',
               borderRadius: '50%',
               cursor: 'pointer',
               backgroundColor:"white"
@@ -157,7 +166,7 @@ export default function NewEstimate() {
         <div style={{width:"100%",border:"0.5px solid #E0DFDF"}}></div>
 
         {/* Step Bar */}
-        <div style={{ display: 'flex', gap: '25px', alignItems: 'center' ,padding:"0px 20px"}}>
+        <div style={{ display: 'flex', gap: '25px', alignItems: 'center' ,padding:"0px 20px",height:"60px"}}>
           {['BasicDetails', 'EstimateDetails', 'QuoteDetails'].map((step, index) => {
             const stepStyle = getStepStyle(step);
             return (
@@ -165,10 +174,11 @@ export default function NewEstimate() {
                 key={step}
                 style={stepStyle.container}
                 onClick={() => setCurrentStep(step)}
+              
               >
                 <div style={stepStyle.circle}>
                   {completedSteps.includes(step) ? (
-                    <span style={{ color: '#D15B2C' }}>✓</span> // Orange colored tick
+                    <img src='./images/tick.png' style={{height:"17px",width:"17px"}}></img> // Orange colored tick
                   ) : (
                     (index + 1).toString().padStart(2, '0')
                   )}
