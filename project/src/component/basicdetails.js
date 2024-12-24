@@ -119,49 +119,117 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
     }));
   };
 
-  const DropdownField = ({ label, value, onClick, showDropdown, data, handleSelect, fetchFunction }) => (
-    <div style={{ marginTop: '8px', position: 'relative' }}>
-      <label className={styles.label}>{label}</label>
-      <br />
-      <div style={{ position: 'relative' }}>
-        <input
-          placeholder="Select here"
-          className={styles.seelct}
-          value={value}
+  const DropdownField = ({
+    label,
+    value,
+    onClick,
+    showDropdown,
+    data,
+    handleSelect,
+    fetchFunction,
+  }) => {
+    const [searchTerm, setSearchTerm] = useState("");
+  
+    const filteredData = data.filter((item) =>
+      (item.client_name || item.department_name || item.contact_name || item.sales_person_name || item.city)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+  
+    return (
+      <div style={{ marginTop: "8px", position: "relative" }}>
+        <label className={styles.label}>{label}</label>
+        <br />
+        <div style={{ position: "relative" }}>
+          <input
+            placeholder="Select here"
+            className={styles.seelct}
+            value={value}
+            onClick={() => {
+              onClick(!showDropdown);
+              if (!showDropdown) fetchFunction();
+            }}
+            readOnly
+
+            
+          />
+         
+          <span
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: showDropdown
+                ? "translateY(-50%) rotate(180deg)"
+                : "translateY(-50%)",
+              transition: "transform 0.2s ease-in-out",
+              cursor: "pointer",
+            }}
+          >
+            <img
+              src=".\images\arrow-down-bold.svg"
+              style={{ height: "10px", width: "10px" }}
+            />
+          </span>
+        </div>
+        {showDropdown && (
+  <div className={styles.dropdown}>
+    {/* Search Input with Icon */}
+    <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+  <input
+    type="text"
+    placeholder="Type to search here"
+    className={styles.searchInput}
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    style={{ backgroundColor: "#F7F7F7", padding: "10px 10px 10px 30px",outline:"none",border:"none",width:"100%" }} // Adjust padding for icon space
+  />
+  <span
+    style={{
+      position: "absolute",
+      left: "10px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      pointerEvents: "none",
+    }}
+  >
+    <img
+      src="./images/search1.png" // Replace with your actual icon path
+      alt="Search"
+      style={{ width: "16px", height: "16px" }}
+    />
+  </span>
+ 
+</div>
+<hr style={{margin:"0"}}></hr>
+
+    {filteredData.length > 0 ? (
+      filteredData.map((item) => (
+        <div
+          key={item.id}
+          className={styles.dropdownItem}
           onClick={() => {
-            onClick(!showDropdown);
-            if (!showDropdown) fetchFunction();
-          }}
-          readOnly
-        />
-        <span
-          style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: showDropdown ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)',
-            transition: 'transform 0.2s ease-in-out',
-            cursor: 'pointer',
+            handleSelect(item);
+            setSearchTerm(""); // Clear search term after selection
           }}
         >
-          <img src='.\images\arrow-down-bold.svg' style={{ height: "10px", width: "10px" }} />
-        </span>
-      </div>
-      {showDropdown && (
-        <div className={styles.dropdown}>
-          {data.length > 0 ? (
-            data.map((item) => (
-              <div key={item.id} className={styles.dropdownItem} onClick={() => handleSelect(item)}>
-                {item.client_name || item.department_name || item.contact_name || item.sales_person_name || item.city}
-              </div>
-            ))
-          ) : (
-            <div className={styles.noData}>No data found</div>
-          )}
+          {item.client_name ||
+            item.department_name ||
+            item.contact_name ||
+            item.sales_person_name ||
+            item.city}
         </div>
-      )}
-    </div>
-  );
+      ))
+    ) : (
+      <div className={styles.noData}>No data found</div>
+    )}
+  </div>
+)}
+
+      </div>
+    );
+  };
+  
 
   useEffect(() => {
     fetchClients();
@@ -173,7 +241,8 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
 
   return (
     <div style={{ boxSizing: 'border-box', backgroundColor: 'white', width: '100%' }}>
-      <div style={{ padding: '0px 20px', backgroundColor: "white" }}>
+      
+      <div style={{ padding: '0px 20px', backgroundColor: "white",paddingBottom:"80px"}}>
         <p style={{ fontSize: '16px' }}>Let’s start with basic details.</p>
 
         <DropdownField
@@ -208,7 +277,7 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
           value={selectedSalesperson}
           onClick={setShowSalespersonDropdown}
           showDropdown={showSalespersonDropdown}
-          data={salespersons}
+          data={salespersons}   
           handleSelect={handleSalespersonSelect}
           fetchFunction={fetchSalespersons}
         />
@@ -222,8 +291,9 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
           fetchFunction={fetchAddresses}
         />
       </div>
+    
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative", minHeight: "100vh" ,paddingTop:"15%"}}>
   {/* Content Area */}
   <div style={{ padding: "0px 20px", paddingBottom: "100px" }}>
     {/* Your main content goes here */}
@@ -252,7 +322,7 @@ export default function BasicDetails({ details, setBasicDetails, handlenextstep 
       }}
     >
       <button className={styles.btn} onClick={handlenextstep}>
-        Create Estimate
+      Next step
       </button>
     </div>
   </div>

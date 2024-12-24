@@ -60,8 +60,9 @@ export default function QuoteDetails({ quoteDetails, setDetails, onBack,onCreate
         </p>
 
         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }} onClick={() => setShowDropdown((prev) => !prev)}>
-          <button style={{ border: 'none', border: '1px solid #E8E8E8', backgroundolor: "rgba(224, 223, 223, 0.5)", height: '30px', width: '30px',display:"flex",justifyContent:"center",alignItems:"center",opacity:"1"}}>
-           <p style={{fontSize:"14px"}}>+</p>
+          <button style={{ border: 'none', border: '1px solid #E8E8E8', backgroundolor: "WHITE", height: '30px', width: '30px',display:"flex",justifyContent:"center",alignItems:"center",opacity:"1"}}onMouseOver={(e) => e.target.style.backgroundColor = "rgba(224, 223, 223, 0.5)" } onMouseOut={(e) => e.target.style.backgroundColor = "white"}
+  >
+          +
           </button>
           <p style={{ fontSize: '14px',opacity:1,fontWeight:"500" }}>Add New Estimate</p>
         </div>

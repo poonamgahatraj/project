@@ -160,7 +160,7 @@ export default function NewEstimate() {
               backgroundColor:"white"
             }}
           >
-            x
+            X
           </button>
         </div>
         <div style={{width:"100%",border:"0.5px solid #E0DFDF"}}></div>
